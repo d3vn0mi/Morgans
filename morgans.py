@@ -4,7 +4,7 @@ import mass_odt_enc_obf  # Importing as a module
 from logger_setup import setup_logger  # Import the setup_logger function
 
 def run_mass_odt_gen(args):
-    output_folder = mass_odt_gen.find_or_create_output_folder()
+    output_folder = mass_odt_gen.find_or_create_output_dir()
     file_list = mass_odt_gen.load_file_names(args.file_list)
     mass_odt_gen.generate_documents(args.num_files, args.percentage_malicious, output_folder, file_list)
 
@@ -14,10 +14,13 @@ def run_mass_odt_enc_obf(args):
         strings_to_encrypt=mass_odt_enc_obf.load_patterns(args.encrypt_strings),
         strings_to_obfuscate=mass_odt_enc_obf.load_patterns(args.obfuscate_strings) if args.obfuscate else [],
         obfuscate_vars=args.obfuscate_vars,
-        macro_folder=args.macro_dir,
+        macro_dir=args.macro_dir,
         macro_file=args.macro_file
     )
-    
+
+    if args.serve:
+        mass_odt_enc_obf.serve_directory(port=args.port)  # Blocking; serves until Ctrl+C
+
     
 def display_banner():
     banner = """      
@@ -29,7 +32,7 @@ def display_banner():
     \_|  |_/ \___/ \_| \_| \____/\_| |_/\_| \_/\____/ 
                                                     
                                                         
-    Created by mrsudo                                         
+    Created by d3vn0mi
     """
     print(banner)
 
@@ -57,6 +60,8 @@ def main():
     parser_enc_obf.add_argument("--encrypt-strings", "-es", default="enc_strings.txt", help="Patterns for encryption, as a file path or a comma-separated list.")
     parser_enc_obf.add_argument("--obfuscate-strings", "-os", default="obf_strings.txt", help="Patterns for obfuscation, as a file path or a comma-separated list.")
     parser_enc_obf.add_argument("--obfuscate-vars", "-ov", default=False, action='store_true', help="Enable obfuscation of variable names.")
+    parser_enc_obf.add_argument("--serve", "-s", default=False, action='store_true', help="Serve the processed directory over HTTP after processing.")
+    parser_enc_obf.add_argument("--port", "-p", type=int, default=8889, help="Port to serve on when --serve is enabled.")
     parser_enc_obf.set_defaults(func=run_mass_odt_enc_obf)
 
     args = parser.parse_args()

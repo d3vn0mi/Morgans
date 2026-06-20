@@ -9,7 +9,6 @@ import string
 import shutil
 import http.server
 import socketserver
-import threading
 import logging
 from logger_setup import setup_logger  # Import the setup_logger function
 
@@ -23,13 +22,6 @@ def serve_directory(port=8889):
     with socketserver.TCPServer(("", port), Handler) as httpd:
         logger.info(f"Serving the current directory at http://localhost:{port}")
         httpd.serve_forever()
-
-def start_server(port=8889):
-    logger = logging.getLogger('logger')
-    server_thread = threading.Thread(target=serve_directory, args=(port,), daemon=True)
-    server_thread.start()
-    logger.info(f"Server started on port {port}. Press Ctrl+C to stop.")
-    
 
 def zip_dir(dir_path, output_zip):
     """
@@ -100,7 +92,7 @@ def obfuscate_starbasic_vars(code):
     obfuscated_script = code
     for var_name, obfuscated_name in obfuscation_map.items():
         logger.debug(f"Var: {var_name} => {obfuscated_name}")
-        obfuscated_script = re.sub(r'\b{}\b'.format(var_name), obfuscated_name, obfuscated_script)
+        obfuscated_script = re.sub(r'\b{}\b'.format(re.escape(var_name)), obfuscated_name, obfuscated_script)
 
     return obfuscated_script
 
@@ -197,6 +189,8 @@ def main():
     parser.add_argument("--encrypt-strings", "-es",default="enc_strings.txt", help="Patterns for encryption, as a file path or a comma-separated list.")
     parser.add_argument("--obfuscate-strings", "-os", default="obf_strings.txt", help="Patterns for obfuscation, as a file path or a comma-separated list.")
     parser.add_argument("--obfuscate-vars", "-ov", default=False, action='store_true', help="Enable obfuscation of variable names.")
+    parser.add_argument("--serve", "-s", default=False, action='store_true', help="Serve the processed directory over HTTP after processing.")
+    parser.add_argument("--port", "-p", type=int, default=8889, help="Port to serve on when --serve is enabled.")
 
     args = parser.parse_args()
 
@@ -212,16 +206,15 @@ def main():
             logger.info("Obfuscating user supplied strings....")
             logger.debug(f"Strings to obfuscate -> {strings_to_obfuscate}")
 
-    process_odt_files(args.dir, 
-                      strings_to_encrypt, 
-                      strings_to_obfuscate, 
-                      obfuscate_vars=args.obfuscate_vars, 
+    process_odt_files(args.dir,
+                      strings_to_encrypt,
+                      strings_to_obfuscate,
+                      obfuscate_vars=args.obfuscate_vars,
                       macro_dir= args.macro_dir,
                       macro_file=args.macro_file)
 
-    start_server(port=8889)  # Non-blocking way
-    
-    serve_directory(port=8887)  # Blocking way 
+    if args.serve:
+        serve_directory(port=args.port)  # Blocking; serves until Ctrl+C
 
 if __name__ == "__main__":
     main()

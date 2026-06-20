@@ -1,4 +1,7 @@
 .venv
 __pycache__
 logfile.log
-/odt_folder
+/odt_dir
+*_encrypted/
+*_keys/
+for_student.zip
