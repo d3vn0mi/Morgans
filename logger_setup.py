@@ -6,6 +6,12 @@ def setup_logger():
     logger = logging.getLogger('logger')
     logger.setLevel(logging.INFO)  # Set the minimum logging level
 
+    # Guard against duplicate handlers: setup_logger() is called from several
+    # modules/functions, and re-adding handlers to the same named logger would
+    # cause every message to be emitted multiple times.
+    if logger.handlers:
+        return logger
+
     # Create a file handler that logs messages to a file
     file_handler = logging.FileHandler('logfile.log')
     file_handler.setLevel(logging.DEBUG)  # Set the minimum logging level for this handler

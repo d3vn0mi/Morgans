@@ -4,7 +4,7 @@ import mass_odt_enc_obf  # Importing as a module
 from logger_setup import setup_logger  # Import the setup_logger function
 
 def run_mass_odt_gen(args):
-    output_folder = mass_odt_gen.find_or_create_output_folder()
+    output_folder = mass_odt_gen.find_or_create_output_dir()
     file_list = mass_odt_gen.load_file_names(args.file_list)
     mass_odt_gen.generate_documents(args.num_files, args.percentage_malicious, output_folder, file_list)
 
@@ -29,7 +29,7 @@ def display_banner():
     \_|  |_/ \___/ \_| \_| \____/\_| |_/\_| \_/\____/ 
                                                     
                                                         
-    Created by mrsudo                                         
+    Created by d3vn0mi
     """
     print(banner)
 
