@@ -1,5 +1,7 @@
 # Morgans
 
+> A **d3vn0mi** project.
+
 Morgans is a comprehensive toolset designed for processing ODT (OpenDocument Text) files. It integrates multiple functionalities, including document generation, encryption, obfuscation, and serving files via a simple HTTP server. This tool is ideal for scenarios requiring document manipulation or security-focused operations.
 
 ## Scripts Overview
@@ -12,7 +14,7 @@ This script is responsible for modifying the content of ODT documents based on a
 - Modifies the content of ODT files using specified templates.
 - Can be used as a standalone script or imported as a module.
 
-### 2. `mass-odt-gen.py`
+### 2. `mass_odt_gen.py`
 
 This script generates a mix of benign and malicious ODT documents using filenames provided in a text file. It imports and utilizes the functionality provided by `odt_generator.py`.
 
@@ -24,7 +26,7 @@ This script generates a mix of benign and malicious ODT documents using filename
 
 #### Usage:
 ```bash
-python mass-odt-gen.py <num_files> <percentage_malicious> --file-list <path_to_filenames.txt>
+python mass_odt_gen.py <num_files> <percentage_malicious> --file-list <path_to_filenames.txt>
 ```
 
 #### Arguments:
@@ -34,7 +36,7 @@ python mass-odt-gen.py <num_files> <percentage_malicious> --file-list <path_to_f
 
 #### Example:
 ```bash
-python mass-odt-gen.py 30 40 --file-list filenames.txt
+python mass_odt_gen.py 30 40 --file-list filenames.txt
 ```
 
 #### `filenames.txt` Format:
@@ -54,7 +56,7 @@ market_research
 ...
 ```
 
-### 3. `mass-odt-enc-obf.py`
+### 3. `mass_odt_enc_obf.py`
 
 This script provides a comprehensive solution for processing multiple ODT files. It includes features for encrypting specified patterns within ODT files, obfuscating text, and even serving files via a simple HTTP server.
 
@@ -67,7 +69,7 @@ This script provides a comprehensive solution for processing multiple ODT files.
 
 #### Usage:
 ```bash
-python mass-odt-enc-obf.py --dir <folder_path> [options]
+python mass_odt_enc_obf.py --dir <folder_path> [options]
 ```
 
 #### Arguments:
@@ -81,16 +83,16 @@ python mass-odt-enc-obf.py --dir <folder_path> [options]
 
 #### Example:
 ```bash
-python mass-odt-enc-obf.py --dir ./odt_files --encrypt-strings enc_strings.txt --obfuscate --obfuscate-vars
+python mass_odt_enc_obf.py --dir ./odt_files --encrypt-strings enc_strings.txt --obfuscate --obfuscate-vars
 ```
 
-### 4. `Morgans.py`
+### 4. `morgans.py`
 
-`Morgans.py` is the core script of this toolset. It integrates and manages the functionalities provided by `mass-odt-gen.py` and `mass-odt-enc-obf.py`. This is the only script the user needs to run to access all features.
+`morgans.py` is the core script of this toolset. It integrates and manages the functionalities provided by `mass_odt_gen.py` and `mass_odt_enc_obf.py`. This is the only script the user needs to run to access all features.
 
 #### Usage:
 ```bash
-python Morgans.py [subcommand] [options]
+python morgans.py [subcommand] [options]
 ```
 
 #### Subcommands:
@@ -110,17 +112,23 @@ python Morgans.py [subcommand] [options]
 
 ## Installation
 
-To use these scripts, you need to have Python installed on your system along with the required packages. You can install the dependencies using the following command:
+To use these scripts, you need to have Python installed on your system along with the required packages. You can install the dependencies using either of the following commands:
 
 ```bash
+pip install -r requirements.txt
+# or, to install the single dependency directly:
 pip install odfpy
 ```
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Maintainer
+
+Maintained by **d3vn0mi**.
 
